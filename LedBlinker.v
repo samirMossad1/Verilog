@@ -117,3 +117,62 @@ endmodule
 
 
 
+////////////////////////////////
+///////////////////////////////
+//////////////////////////////
+
+`include "LedBlinker.v"
+`timescale 1us/1ns
+
+
+module testBench_1;
+
+
+reg Sw1=1'b0;
+reg Sw2=1'b0;
+reg Clock=1'b0;
+reg Enable=1'b0;
+
+wire Ledout;
+
+ LedB UUT
+(
+ .i_clck(Clock),
+ .i_s1(Sw1),
+ .i_s2(Sw2),
+ .i_enable(Enable),
+ .o_ledDriver(Ledout)
+);
+
+
+always #20 Clock<=!Clock;
+
+
+initial begin
+    Enable <= 1'b1;
+ 
+    Sw1 <= 1'b0;
+    Sw2 <= 1'b0;
+    #200000 // 0.2 seconds
+     
+
+    Sw1 <= 1'b0;
+    Sw2 <= 1'b1;
+    #200000 // 0.2 seconds
+     
+    Sw1 <= 1'b1;
+    Sw2 <= 1'b0;
+    #500000 // 0.5 seconds
+ 
+    Sw1 <= 1'b1;
+    Sw2 <= 1'b1;
+    #2000000 // 2 seconds
+ 
+    $display("Test Complete");
+  end
+   
+
+
+
+
+endmodule
