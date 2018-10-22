@@ -68,6 +68,47 @@ end
 
 endmodule
 
+module Alu(in_1,in_2,Aluctrl,zeroflag,Aluout);
+
+input [31:0] in_1,in_2;
+input [3:0] Aluctrl;
+output reg [31:0] Aluout;
+output zeroflag;
+
+parameter 	And=4'h0,
+  		Or=4'h1,
+		Add=4'h2,
+		Minus=4'h6,
+		Compare=4'h7,
+		Nor=4'h12;
+		
+		
+assign zeroflag=(in_1==in_2)?1:0; 	
+
+always @(in_1 or in_2 or Aluctrl)
+begin
+
+case(Aluctrl)
+
+And : Aluout<=in_1 & in_2 ;
+
+Or :  Aluout<=in_1 | in_2 ;
+
+Add : Aluout<=in_1 + in_2 ;
+
+Minus :Aluout<=in_1 - in_2 ;
+
+Compare : Aluout<=(in_1<in_2)?1:0;
+
+Nor :Aluout<=~(in_1 | in_2) ;
+
+endcase
+
+end
+
+endmodule
+
+
 module testmips();
 
 /*
@@ -106,6 +147,37 @@ Readpath1=6;
 Readpath2=10;
 
 end
+*/
+/*
+/////Alu test//////
+
+reg [31:0] in_1 ,in_2;
+reg [3:0]Aluctrl;
+wire [31:0]Aluout;
+wire zeroflag;
+
+
+Alu A1(in_1,in_2,Aluctrl,zeroflag,Aluout);
+
+initial
+begin 
+in_1=32'hffff_ffff;
+in_2=32'h0000_0000;
+Aluctrl=4'h0;
+#5
+Aluctrl=4'h1;
+#5
+Aluctrl=4'h7;
+#5
+in_1=32'hffff_fffb;
+in_2=32'hffff_ffff;
+
+#5
+in_1=32'hffff_ffff;
+in_2=32'hffff_ffff;
+
+end
+
 */
 
 endmodule
